@@ -1,0 +1,94 @@
+use std::fs::File;
+use std::io::{self, BufRead};
+use std::path::Path;
+
+/// Read files
+fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>>
+where
+    P: AsRef<Path>,
+{
+    let file = File::open(filename)?;
+    Ok(io::BufReader::new(file).lines())
+}
+
+fn is_it_safe(i: usize, list_s: &str) -> bool {
+    let mut list: Vec<i32> = vec![];
+    for elem in list_s.trim().split_whitespace() {
+        list.push(elem.parse().expect("not an int ! "));
+    }
+
+    print!("[{}] ", i);
+    for c in &list {
+        print!("{},", c);
+    }
+
+    let list_size: usize = list.len();
+    let mut init_test = list[0] - list[1];
+    if init_test == 0 {
+        init_test = list[1] - list[2];
+    }
+    if init_test == 0 {
+        init_test = list[2] - list[3];
+    }
+    if init_test == 0 {
+        println!();
+        println!();
+        println!();
+        println!();
+    }
+
+    if init_test < 0 {
+        // increasing
+        let mut count = 0;
+        for i in 1..list_size {
+            let test = list[i] - list[i - 1];
+            if (test < 1) || (test > 3) {
+                print!("<oh-ho! [{} & {}] >", list[i], list[i - 1]);
+                count = count + 1;
+            }
+            if count > 1 {
+                println!(": [{}] is NOT OK ! ", count);
+                return false;
+            }
+        }
+        println!(": [{}] increasing ", count);
+    } else {
+        // decreasing
+        let mut count = 0;
+        for i in 1..list_size {
+            let test = list[i - 1] - list[i];
+            if (test < 1) || (test > 3) {
+                print!("<oh-ho! [{} & {}] >", list[i - 1], list[i]);
+                count = count + 1
+            }
+            if count > 1 {
+                println!(": [{}] is NOT OK ! ", count);
+                return false;
+            }
+        }
+        println!(": [{}] decreasing ", count);
+    }
+    true
+}
+
+fn main() {
+    let mut report: Vec<String> = vec![];
+
+    if let Ok(lines) = read_lines("input.txt") {
+        for line in lines.flatten() {
+            report.push(line)
+        }
+        println!("Report Size: {}", report.len());
+    } else {
+        println!("File not found");
+    }
+
+    let nbr_size: usize = report.len();
+    let mut total: u64 = 0;
+    for i in 0..nbr_size {
+        if is_it_safe(i, &report[i]) {
+            total = total + 1;
+        }
+    }
+    println!("Total is: {}", total);
+}
