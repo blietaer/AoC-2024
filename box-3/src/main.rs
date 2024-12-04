@@ -31,8 +31,20 @@ fn main() {
     let mut report: Vec<String> = vec![];
 
     if let Ok(lines) = read_lines("input.txt") {
+        let mut do_not_store = false;
         for line in lines.flatten() {
-            report.push(line)
+            if line.contains("do()") {
+                do_not_store = false;
+            }
+            if line.contains("don't()") {
+                do_not_store = true;
+            }
+
+            if do_not_store {
+                continue;
+            } else {
+                report.push(line)
+            }
         }
         println!("Report Size: {}", report.len());
     } else {
