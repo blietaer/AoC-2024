@@ -11,117 +11,17 @@ where
     Ok(io::BufReader::new(file).lines())
 }
 
-// Read Horiz Forward
-fn check_horiz(i: usize, j: usize, grid: &Vec<Vec<char>>) -> bool {
-    if j <= 139 - 3 {
-        if grid[i][j] == 'X'
-            && grid[i][j + 1] == 'M'
-            && grid[i][j + 2] == 'A'
-            && grid[i][j + 3] == 'S'
+// Read
+fn check_xmas(i: usize, j: usize, grid: &Vec<Vec<char>>) -> bool {
+    if i < 140 - 1 && j < 140 - 1 && i >= 1 && j >= 1 {
+        // if i <= 139 - 1 && j <= 139 - 1 && i >= 1 && j >= 1 {
+        if grid[i][j] == 'A'
+            && ((grid[i - 1][j - 1] == 'M' && grid[i + 1][j + 1] == 'S')
+                || (grid[i - 1][j - 1] == 'S' && grid[i + 1][j + 1] == 'M'))
+            && ((grid[i - 1][j + 1] == 'M' && grid[i + 1][j - 1] == 'S')
+                || (grid[i - 1][j + 1] == 'S' && grid[i + 1][j - 1] == 'M'))
         {
-            println!("@[{}][{}]: We have horiz XMAS", i, j);
-            return true;
-        }
-    }
-    return false;
-}
-
-// Read Horiz backward
-fn check_horiz_back(i: usize, j: usize, grid: &Vec<Vec<char>>) -> bool {
-    if j >= 3 {
-        if grid[i][j] == 'X'
-            && grid[i][j - 1] == 'M'
-            && grid[i][j - 2] == 'A'
-            && grid[i][j - 3] == 'S'
-        {
-            println!("@[{}][{}]: We have horiz back XMAS", i, j);
-            return true;
-        }
-    }
-    return false;
-}
-
-// Read Vert Down
-fn check_vert_down(i: usize, j: usize, grid: &Vec<Vec<char>>) -> bool {
-    if i <= 139 - 3 {
-        if grid[i][j] == 'X'
-            && grid[i + 1][j] == 'M'
-            && grid[i + 2][j] == 'A'
-            && grid[i + 3][j] == 'S'
-        {
-            println!("@[{}][{}]: We have vert down XMAS", i, j);
-            return true;
-        }
-    }
-    return false;
-}
-
-// Read Vert up
-fn check_vert_up(i: usize, j: usize, grid: &Vec<Vec<char>>) -> bool {
-    if i >= 3 {
-        if grid[i][j] == 'X'
-            && grid[i - 1][j] == 'M'
-            && grid[i - 2][j] == 'A'
-            && grid[i - 3][j] == 'S'
-        {
-            println!("@[{}][{}]: We have vert up XMAS", i, j);
-            return true;
-        }
-    }
-    return false;
-}
-// Read diag Up right
-fn check_diag_up_right(i: usize, j: usize, grid: &Vec<Vec<char>>) -> bool {
-    if j <= 139 - 3 && i >= 3 {
-        if grid[i][j] == 'X'
-            && grid[i - 1][j + 1] == 'M'
-            && grid[i - 2][j + 2] == 'A'
-            && grid[i - 3][j + 3] == 'S'
-        {
-            println!("@[{}][{}]: We have diag up right XMAS", i, j);
-            return true;
-        }
-    }
-    return false;
-}
-// Read diag Up Left
-fn check_diag_up_left(i: usize, j: usize, grid: &Vec<Vec<char>>) -> bool {
-    if i >= 3 && j >= 3 {
-        if grid[i][j] == 'X'
-            && grid[i - 1][j - 1] == 'M'
-            && grid[i - 2][j - 2] == 'A'
-            && grid[i - 3][j - 3] == 'S'
-        {
-            println!("@[{}][{}]: We have diag up left XMAS", i, j);
-            return true;
-        }
-    }
-    return false;
-}
-// Read diag down Left
-fn check_diag_down_left(i: usize, j: usize, grid: &Vec<Vec<char>>) -> bool {
-    if i <= 139 - 3 && j >= 3 {
-        if grid[i][j] == 'X'
-            && grid[i + 1][j - 1] == 'M'
-            && grid[i + 2][j - 2] == 'A'
-            && grid[i + 3][j - 3] == 'S'
-        {
-            println!("@[{}][{}]: We have diag down left XMAS", i, j);
-            return true;
-        }
-    }
-    return false;
-}
-
-// Read diag down Right
-fn check_diag_down_right(i: usize, j: usize, grid: &Vec<Vec<char>>) -> bool {
-    if i <= 139 - 3 && j <= 139 - 3 {
-        if grid[i][j] == 'X'
-            && grid[i + 1][j + 1] == 'M'
-            && grid[i + 2][j + 2] == 'A'
-            && grid[i + 3][j + 3] == 'S'
-        {
-            println!("@[{}][{}]: We have diag down right XMAS", i, j);
+            println!("@[{}][{}]: We have XMAS", i, j);
             return true;
         }
     }
@@ -156,30 +56,9 @@ fn main() {
     for i in 0..140 {
         for j in 0..140 {
             // println!("@[{}][{}]: '{}'", i, j, grid[i][j]);
-            if grid[i][j] == 'X' {
-                // println!("We have 'X' @[{}][{}]: checking for horiz XMASS", i, j);
-                if check_horiz(i, j, &grid) {
-                    total = total + 1;
-                }
-                if check_horiz_back(i, j, &grid) {
-                    total = total + 1;
-                }
-                if check_vert_down(i, j, &grid) {
-                    total = total + 1;
-                }
-                if check_vert_up(i, j, &grid) {
-                    total = total + 1;
-                }
-                if check_diag_up_right(i, j, &grid) {
-                    total = total + 1;
-                }
-                if check_diag_up_left(i, j, &grid) {
-                    total = total + 1;
-                }
-                if check_diag_down_left(i, j, &grid) {
-                    total = total + 1;
-                }
-                if check_diag_down_right(i, j, &grid) {
+            if grid[i][j] == 'A' {
+                // println!("We have 'A' @[{}][{}]: checking for horiz XMASS", i, j);
+                if check_xmas(i, j, &grid) {
                     total = total + 1;
                 }
             }
